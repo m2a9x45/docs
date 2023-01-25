@@ -12,6 +12,8 @@ toc_footers:
   - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
 
 includes:
+  - depWithDetails
+  - service
   - errors
 
 search: true
@@ -154,7 +156,7 @@ async function getDepatures(token) {
 ]
 ```
 
-This endpoint retruns a number of live depatures from the specifed station
+This endpoint retruns up to 150 live depatures from the specifed station
 
 ### HTTP Request
 
