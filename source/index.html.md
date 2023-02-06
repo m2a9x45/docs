@@ -1,69 +1,36 @@
 ---
 title: API Reference
 
-language_tabs: # must be one of https://git.io/vQNgJ
+language_tabs:
   - shell
   - ruby
   - python
   - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
+  - <a href='https://yeahtrain.com'>Sign Up for a API Key</a>
 
 includes:
   - depWithDetails
-  - service
-  - errors
-
-search: true
+  # - service
 
 code_clipboard: true
 
 meta:
   - name: description
-    content: Documentation for the Kittn API
+    content: Documentation for the yeahtrain API
 ---
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
-
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+Welcome to the yeahtrain API! You can use our API to access UK railway depature information. At the moment this 
+is a very simple barebones API but we're looking to add more features soon.
 
 # Authentication
 
-> To authorize, use this code:
+We use API keys to allow access to the API. You can register a new API key within the [developer portal](https://yeahtrain.com/app).
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here" \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-We use API keys to allow access to the API. You can register a new API key within the [developer portal](http://example.com/developers).
-
-Your expected to include your API key in all API requests to the server in a custom header that looks like the following:
+We expect each reqeust to include your API key in a custom header called `x-api-key` that looks like the following:
 
 `x-api-key: {API_KEY}`
 
@@ -79,7 +46,7 @@ You must replace <code>{API_KEY}</code> with your personal API key. Your API wil
 require "uri"
 require "net/http"
 
-url = URI("localhost:3000/station/kgx/departures")
+url = URI("https://api.yeahtrain.com/station/kgx/departures")
 
 http = Net::HTTP.new(url.host, url.port);
 request = Net::HTTP::Get.new(url)
@@ -92,7 +59,7 @@ puts response.read_body
 ```python
 import requests
 
-url = "https://api.localhost.com/station/kgx/departures"
+url = "https://api.yeahtrain.com/station/kgx/departures"
 
 payload={}
 headers = {
@@ -105,13 +72,13 @@ print(response.text)
 ```
 
 ```shell
-curl --location --request GET 'localhost:3000/station/kgx/departures' \
+curl --location --request GET 'https://api.yeahtrain.com/station/kgx/departures' \
 --header 'X-API-KEY: {API_KEY}'
 ```
 
 ```javascript
 async function getDepatures(token) {
-    const response = await fetch('https://api.localhost.com/station/kgx/departures', {
+    const response = await fetch('https://api.yeahtrain.com/station/kgx/departures', {
         headers: {
             'X-API-KEY': token,
             'Content-Type': 'application/json'
@@ -122,8 +89,6 @@ async function getDepatures(token) {
     return json
 }
 ```
-
-> The above command returns JSON structured like this:
 
 ```json
 [
@@ -160,13 +125,18 @@ This endpoint retruns up to 150 live depatures from the specifed station
 
 ### HTTP Request
 
-`GET http://example.com/api/station/{CRS_CODE}/departures`
+`GET https://api.yeahtrain.com/station/{CRS_CODE}/departures?numRows=20`
 
 ### Query Parameters
 
-Parameter | Description
---------- | -----------
-CRS_CODE | A 3 letter station code (KGX, ABR)
+Parameter | Required | Default | Description
+--------- | ----------- | ----------- | -----------
+CRS_CODE | Required | | 3 letter station code (KGX, ABR)
+numRows | Optional | 20 | `0` to `150` - Maxium number of rows to be retuned
+filterCrs | Optional | | CRS code of either an origin or destination location you'd like to filter to
+filterType | Optional |to | `from` or `to` - The type of filter to apply. Filters services to include only those originating or terminating at the filterCrs location
+timeOffset | Optional | 0 | `-120` to `120` - An offset in minutes against the current time to provide the station board for
+timeWindow | Optional | 120 | `-120` to `120` - How far into the future in minutes, relative to timeOffset, to return services for.
 
 <aside class="notice">
 A list of CRS codes can be found <a href="https://www.nationalrail.co.uk/stations_destinations/48541.aspx">here</a>

@@ -6,7 +6,7 @@
 require "uri"
 require "net/http"
 
-url = URI("localhost:3000/station/kgx/departures")
+url = URI("https://api.yeahtrain.com/service/{serviceID}")
 
 http = Net::HTTP.new(url.host, url.port);
 request = Net::HTTP::Get.new(url)
@@ -19,7 +19,7 @@ puts response.read_body
 ```python
 import requests
 
-url = "https://api.localhost.com/station/kgx/departures"
+url = "https://api.yeahtrain.com/service/{serviceID}"
 
 payload={}
 headers = {
@@ -32,13 +32,13 @@ print(response.text)
 ```
 
 ```shell
-curl --location --request GET 'localhost:3000/station/kgx/departures' \
+curl --location --request GET 'https://api.yeahtrain.com/service/{serviceID}' \
 --header 'X-API-KEY: {API_KEY}'
 ```
 
 ```javascript
 async function getDepatures(token) {
-    const response = await fetch('https://api.localhost.com/station/kgx/departures', {
+    const response = await fetch('https://api.yeahtrain.com/service/{serviceID}', {
         headers: {
             'X-API-KEY': token,
             'Content-Type': 'application/json'
@@ -49,8 +49,6 @@ async function getDepatures(token) {
     return json
 }
 ```
-
-> The above command returns JSON structured like this:
 
 ```json
 [
@@ -87,15 +85,10 @@ This endpoint retruns service information for a given service ID.
 
 ### HTTP Request
 
-`GET http://example.com/api/station/service/{SERVICE_ID}`
+`GET https://api.yeahtrain.com/service/{SERVICE_ID}`
 
 ### Query Parameters
 
 Parameter | Description
 --------- | -----------
-CRS_CODE | A 3 letter station code (KGX, ABR)
 SERVICE_ID | A `service_id` returned either depature endpoing (4993678KNGX____)
-
-<aside class="notice">
-A list of CRS codes can be found <a href="https://www.nationalrail.co.uk/stations_destinations/48541.aspx">here</a>
-</aside>

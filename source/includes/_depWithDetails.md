@@ -4,7 +4,7 @@
 require "uri"
 require "net/http"
 
-url = URI("localhost:3000/station/kgx/departures")
+url = URI("https://api.yeahtrain.com/station/kgx/departures")
 
 http = Net::HTTP.new(url.host, url.port);
 request = Net::HTTP::Get.new(url)
@@ -17,7 +17,7 @@ puts response.read_body
 ```python
 import requests
 
-url = "https://api.localhost.com/station/kgx/departures"
+url = "https://api.yeahtrain.com/station/kgx/departures"
 
 payload={}
 headers = {
@@ -30,13 +30,13 @@ print(response.text)
 ```
 
 ```shell
-curl --location --request GET 'localhost:3000/station/kgx/departures' \
+curl --location --request GET 'https://api.yeahtrain.com/station/kgx/departures' \
 --header 'X-API-KEY: {API_KEY}'
 ```
 
 ```javascript
 async function getDepatures(token) {
-    const response = await fetch('https://api.localhost.com/station/kgx/departures', {
+    const response = await fetch('https://api.yeahtrain.com/station/kgx/departures', {
         headers: {
             'X-API-KEY': token,
             'Content-Type': 'application/json'
@@ -47,8 +47,6 @@ async function getDepatures(token) {
     return json
 }
 ```
-
-> The above command returns JSON structured like this:
 
 ```json
 [
@@ -85,13 +83,18 @@ This endpoint retruns up to 10 live depatures with details from the specifed sta
 
 ### HTTP Request
 
-`GET http://example.com/api/station/{CRS_CODE}/departures/details`
+`GET https://api.yeahtrain.com/station/{CRS_CODE}/departures/details`
 
 ### Query Parameters
 
-Parameter | Description
---------- | -----------
-CRS_CODE | A 3 letter station code (KGX, ABR)
+Parameter | Required | Default | Description
+--------- | ----------- | ----------- | -----------
+CRS_CODE | Required | | 3 letter station code (KGX, ABR)
+numRows | Optional | 5 | `0` to `10` - Maxium number of rows to be retuned
+filterCrs | Optional | | CRS code of either an origin or destination location you'd like to filter to
+filterType | Optional |to | `from` or `to` - The type of filter to apply. Filters services to include only those originating or terminating at the filterCrs location
+timeOffset | Optional | 0 | `-120` to `120` - An offset in minutes against the current time to provide the station board for
+timeWindow | Optional | 120 | `-120` to `120` - How far into the future in minutes, relative to timeOffset, to return services for.
 
 <aside class="notice">
 A list of CRS codes can be found <a href="https://www.nationalrail.co.uk/stations_destinations/48541.aspx">here</a>
