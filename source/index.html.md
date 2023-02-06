@@ -23,7 +23,7 @@ meta:
 
 # Introduction
 
-Welcome to the yeahtrain API! You can use our API to access UK railway depature information. At the moment this 
+👋 Welcome to the yeahtrain API! You can use our API to access UK railway depature information. At the moment this 
 is a very simple barebones API but we're looking to add more features soon.
 
 # Authentication
