@@ -318,6 +318,14 @@
             <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
           </li>
           <li>
+            <a href="#station" class="toc-h1 toc-link" data-title="Station">Station</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#find-station" class="toc-h2 toc-link" data-title="Find Station">Find Station</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#depatures" class="toc-h1 toc-link" data-title="Depatures">Depatures</a>
               <ul class="toc-list-h2">
                   <li>
@@ -325,6 +333,14 @@
                   </li>
                   <li>
                     <a href="#get-depatures-with-details" class="toc-h2 toc-link" data-title="Get Depatures With Details">Get Depatures With Details</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#service" class="toc-h1 toc-link" data-title="Service">Service</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-service" class="toc-h2 toc-link" data-title="Get Service">Get Service</a>
                   </li>
               </ul>
           </li>
@@ -339,6 +355,8 @@
         <h1 id='introduction'>Introduction</h1>
 <p>👋 Welcome to the yeahtrain API! You can use our API to access UK railway depature information. At the moment this 
 is a very simple barebones API but we&#39;re looking to add more features soon.</p>
+
+<p>Currently, we support listing departures, looking up an individual service, and retrieving station information.</p>
 <h1 id='authentication'>Authentication</h1>
 <p>We use API keys to allow access to the API. You can register a new API key within the <a href="https://yeahtrain.com/app">developer portal</a>.</p>
 
@@ -349,6 +367,86 @@ is a very simple barebones API but we&#39;re looking to add more features soon.<
 <aside class="notice">
 You must replace <code>{API_KEY}</code> with your personal API key. Your API will start with `key_`
 </aside>
+<h1 id='station'>Station</h1><h2 id='find-station'>Find Station</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s2">"uri"</span>
+<span class="nb">require</span> <span class="s2">"net/http"</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="no">URI</span><span class="p">(</span><span class="s2">"https://api.yeahtrain.com/station/lookup?name={stationName}"</span><span class="p">)</span>
+
+<span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">url</span><span class="p">.</span><span class="nf">host</span><span class="p">,</span> <span class="n">url</span><span class="p">.</span><span class="nf">port</span><span class="p">);</span>
+<span class="n">request</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">::</span><span class="no">Get</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">request</span><span class="p">[</span><span class="s2">"X-API-KEY"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"{API_KEY}"</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="nf">request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">response</span><span class="p">.</span><span class="nf">read_body</span>
+</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s">"https://api.yeahtrain.com/station/lookup?name={stationName}"</span>
+
+<span class="n">payload</span><span class="o">=</span><span class="p">{}</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s">'X-API-KEY'</span><span class="p">:</span> <span class="s">'{API_KEY}'</span>
+<span class="p">}</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">request</span><span class="p">(</span><span class="s">"GET"</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://api.yeahtrain.com/station/lookup?name={stationName}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'X-API-KEY: {API_KEY}'</span>
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">getDepatures</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://api.yeahtrain.com/station/lookup?name={stationName}</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+            <span class="dl">'</span><span class="s1">X-API-KEY</span><span class="dl">'</span><span class="p">:</span> <span class="nx">token</span><span class="p">,</span>
+            <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+
+    <span class="kd">const</span> <span class="nx">json</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nx">json</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"crs_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EDB"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Edinburgh"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55.95238716"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"long"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-3.188221921"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"Edinburgh station"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"Princes Street"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"Edinburgh"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"Lothian"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"post_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EH1 1BB"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"crs_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EGY"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Edinburgh Gateway"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55.941000"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"long"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-3.32000"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"Edinburgh Gateway station"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"1 Myreton Drive"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"Gogar"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"Lothian"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"post_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EH12 9GF"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div>
+<p>This endpoint retruns stations for a given serach term. </p>
+<h3 id='http-request'>HTTP Request</h3>
+<p><code>GET https://api.yeahtrain.com/station/lookup?name={STATION_NAME}</code></p>
+<h3 id='query-parameters'>Query Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>STATION_NAME</td>
+<td>Search term of a minimum of 3 characters, such as <code>abe</code>, <code>edi</code> or <code>london</code></td>
+</tr>
+</tbody></table>
 <h1 id='depatures'>Depatures</h1><h2 id='get-all-depatures'>Get All Depatures</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s2">"uri"</span>
 <span class="nb">require</span> <span class="s2">"net/http"</span>
 
@@ -465,7 +563,7 @@ You must replace <code>{API_KEY}</code> with your personal API key. Your API wil
 </tbody></table>
 
 <aside class="notice">
-A list of CRS codes can be found <a href="https://www.nationalrail.co.uk/stations_destinations/48541.aspx">here</a>
+You can find a station's CRS code <link><a href="#station">here</a></link> or find a semi up to date list <a href="https://www.nationalrail.co.uk/stations_destinations/48541.aspx">here</a>
 </aside>
 <h2 id='get-depatures-with-details'>Get Depatures With Details</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s2">"uri"</span>
 <span class="nb">require</span> <span class="s2">"net/http"</span>
@@ -583,8 +681,104 @@ A list of CRS codes can be found <a href="https://www.nationalrail.co.uk/station
 </tbody></table>
 
 <aside class="notice">
-A list of CRS codes can be found <a href="https://www.nationalrail.co.uk/stations_destinations/48541.aspx">here</a>
+You can find a station's CRS code <link><a href="#station">here</a></link> or find a semi up to date list <a href="https://www.nationalrail.co.uk/stations_destinations/48541.aspx">here</a>
 </aside>
+<h1 id='service'>Service</h1><h2 id='get-service'>Get Service</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s2">"uri"</span>
+<span class="nb">require</span> <span class="s2">"net/http"</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="no">URI</span><span class="p">(</span><span class="s2">"https://api.yeahtrain.com/service/{serviceID}"</span><span class="p">)</span>
+
+<span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">url</span><span class="p">.</span><span class="nf">host</span><span class="p">,</span> <span class="n">url</span><span class="p">.</span><span class="nf">port</span><span class="p">);</span>
+<span class="n">request</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">::</span><span class="no">Get</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">request</span><span class="p">[</span><span class="s2">"X-API-KEY"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"{API_KEY}"</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="nf">request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">response</span><span class="p">.</span><span class="nf">read_body</span>
+</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s">"https://api.yeahtrain.com/service/{serviceID}"</span>
+
+<span class="n">payload</span><span class="o">=</span><span class="p">{}</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s">'X-API-KEY'</span><span class="p">:</span> <span class="s">'{API_KEY}'</span>
+<span class="p">}</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">request</span><span class="p">(</span><span class="s">"GET"</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://api.yeahtrain.com/service/{serviceID}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'X-API-KEY: {API_KEY}'</span>
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">getDepatures</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span>
+    <span class="dl">"</span><span class="s2">https://api.yeahtrain.com/service/{serviceID}</span><span class="dl">"</span><span class="p">,</span>
+    <span class="p">{</span>
+      <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">X-API-KEY</span><span class="dl">"</span><span class="p">:</span> <span class="nx">token</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">Content-Type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">application/json</span><span class="dl">"</span><span class="p">,</span>
+      <span class="p">},</span>
+    <span class="p">}</span>
+  <span class="p">);</span>
+
+  <span class="kd">const</span> <span class="nx">json</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  <span class="k">return</span> <span class="nx">json</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"depature_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23:33"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"On time"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"platform"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"train_length"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"operator"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"London North Eastern Railway"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GR"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"train"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"origin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"London Kings Cross"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"stops"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"station"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Peterborough"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00:17"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"On time"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"station"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Grantham"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00:45"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"On time"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"station"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Newark North Gate"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00:58"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"On time"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"station"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doncaster"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01:25"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"On time"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"station"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Leeds"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02:20"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"On time"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div>
+<p>This endpoint retruns service information for a given service ID.</p>
+<h3 id='http-request'>HTTP Request</h3>
+<p><code>GET https://api.yeahtrain.com/service/{SERVICE_ID}</code></p>
+<h3 id='query-parameters'>Query Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>SERVICE_ID</td>
+<td>A <code>service_id</code> returned either depature endpoing (4993678KNGX____)</td>
+</tr>
+</tbody></table>
 
       </div>
       <div class="dark-box">
