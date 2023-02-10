@@ -1,4 +1,6 @@
-## Get Depatures With Details
+# Depatures
+
+## Get All Depatures
 
 ```ruby
 require "uri"
@@ -79,18 +81,18 @@ async function getDepatures(token) {
 ]
 ```
 
-This endpoint retruns up to 10 live depatures with details from the specifed station. 
+This endpoint retruns up to 150 live depatures from the specifed station
 
 ### HTTP Request
 
-`GET https://api.yeahtrain.com/station/{CRS_CODE}/departures/details`
+`GET https://api.yeahtrain.com/station/{CRS_CODE}/departures?numRows=20`
 
 ### Query Parameters
 
 Parameter | Required | Default | Description
 --------- | ----------- | ----------- | -----------
 CRS_CODE | Required | | 3 letter station code (KGX, ABR)
-numRows | Optional | 5 | `0` to `10` - Maxium number of rows to be retuned
+numRows | Optional | 20 | `0` to `150` - Maxium number of rows to be retuned
 filterCrs | Optional | | CRS code of either an origin or destination location you'd like to filter to
 filterType | Optional |to | `from` or `to` - The type of filter to apply. Filters services to include only those originating or terminating at the filterCrs location
 timeOffset | Optional | 0 | `-120` to `120` - An offset in minutes against the current time to provide the station board for

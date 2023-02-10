@@ -38,50 +38,66 @@ curl --location --request GET 'https://api.yeahtrain.com/service/{serviceID}' \
 
 ```javascript
 async function getDepatures(token) {
-    const response = await fetch('https://api.yeahtrain.com/service/{serviceID}', {
-        headers: {
-            'X-API-KEY': token,
-            'Content-Type': 'application/json'
-        }
-    })
+  const response = await fetch(
+    "https://api.yeahtrain.com/service/{serviceID}",
+    {
+      headers: {
+        "X-API-KEY": token,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
-    const json = await response.json();
-    return json
+  const json = await response.json();
+  return json;
 }
 ```
 
 ```json
 [
   {
-    "depature_time": "21:42",
+    "depature_time": "23:33",
     "status": "On time",
-    "platform": "9",
+    "platform": "3",
+    "train_length": null,
     "operator": {
-        "name": "Great Northern",
-        "code": "GN"
+      "name": "London North Eastern Railway",
+      "code": "GR"
     },
     "service_type": "train",
-    "service_id": "4993678KNGX____",
     "origin": "London Kings Cross",
-    "destination": "Kings Lynn"
-  },
-  {
-    "depature_time": "21:58",
-    "status": "On time",
-    "platform": "TBC",
-    "operator": {
-        "name": "Thameslink",
-        "code": "TL"
-    },
-    "service_type": "train",
-    "service_id": "4995645KNGX____",
-    "origin": "London Kings Cross",
-    "destination": "Cambridge"
+    "stops": [
+      {
+        "station": "Peterborough",
+        "time": "00:17",
+        "status": "On time"
+      },
+      {
+        "station": "Grantham",
+        "time": "00:45",
+        "status": "On time"
+      },
+      {
+        "station": "Newark North Gate",
+        "time": "00:58",
+        "status": "On time"
+      },
+      {
+        "station": "Doncaster",
+        "time": "01:25",
+        "status": "On time"
+      },
+      {
+        "station": "Leeds",
+        "time": "02:20",
+        "status": "On time"
+      }
+    ]
   }
 ]
 ```
 
-This endpoint retruns service information for a given service ID. 
+This endpoint retruns service information for a given service ID.
 
 ### HTTP Request
 
