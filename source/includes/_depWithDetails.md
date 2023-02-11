@@ -53,10 +53,13 @@ async function getDepatures(token) {
   {
     "depature_time": "21:42",
     "status": "On time",
+    "cancelReason": null,
+    "delayReason": null,
     "platform": "9",
     "operator": {
         "name": "Great Northern",
-        "code": "GN"
+        "code": "GN",
+        "logo": "https://www.nationalrail.co.uk/static/images/structure/GN%20small.png"
     },
     "service_type": "train",
     "service_id": "4993678KNGX____",
@@ -66,10 +69,13 @@ async function getDepatures(token) {
   {
     "depature_time": "21:58",
     "status": "On time",
+    "cancelReason": null,
+    "delayReason": null,
     "platform": "TBC",
     "operator": {
         "name": "Thameslink",
-        "code": "TL"
+        "code": "TL",
+        "logo": "https://www.nationalrail.co.uk/static/images/structure/TL%20small.png"
     },
     "service_type": "train",
     "service_id": "4995645KNGX____",
